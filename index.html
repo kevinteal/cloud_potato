@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>The Cloud Potato</title>
+<link rel="stylesheet" href="clouds.css" />
+<link rel="icon" href="imgs/tv-icon.png" type="image/png">
+<link rel="stylesheet" href="potato.css" />
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="drag_plugin.js"></script>
+<script src="potato.js"></script>
+
+
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+
+
+</head>
+
+<body>
+
+<div id="wrapper">
+
+
+<div id="wolf">
+<img src="imgs/wolflabstrans.png" height="44" width="100" />
+
+</div>
+
+<div id="menu_icon"></div>
+<div id="menu">
+<button onClick="login()"><img src="imgs/admin_login_icon.png" width="16" height="20" /> Login</button>
+
+<p>Login to be able to add new shows and delete current shows</p>
+</div>
+
+
+ 
+  <div id="logo_hold">  
+     	<div id="logo"></div>
+     </div>
+     
+     
+     
+	<div id="clouds">
+        <div class="cloud x1"></div>
+        <!-- Time for multiple clouds to dance around -->
+        <div class="cloud x2"></div>
+        <div class="cloud x3"></div>
+       <div class="cloud x4"></div>
+        <div class="cloud x5"></div>
+	</div>
+    
+    <div id="latest_ep_holder">
+	    <div id="latest_ep">
+        	<span id="latest_heading" class="headings">New Episodes This Week!</span> <span id="step_notify"></span>
+            
+            <div id="new_eps">
+            <center><img src="imgs/loader.gif" height="317" width="317" /><br/>Loading TV Shows</center>
+            	
+            </div>
+        </div>
+        <div id="all_shows">
+        	<span id="all_shows_heading" class="headings">TV Shows List</span>
+            <div id="shows_list">
+                <input id="fliter_btn"  onKeyUp="get_hint(this.value)" type="search"  placeholder="Fliter Shows"/>
+                <button id="full_list_btn" onClick="get_shows_list()">Full List</button>
+                <div id="shows">
+                    <ul id="list_of_shows">
+                    
+                    </ul>
+                </div>
+            </div>
+        </div>
+     </div><!-- latest ep holder -->
+     
+     
+     
+    <div id="history"> 
+       <div id="history_hold">
+             <div id="wiki"><img src="imgs/new-window-icon.png" /><span id="wiki_link"></span></div>
+             <div id="history_season_tab_hold"><div id="history_tabs"></div></div>
+              <div id="history_season_hold"></div>
+       </div>
+	</div>
+
+
+<div id="schedule">
+<div id="sch_wrap">
+<div id="sch_days">
+<div id="sch_0" class="sch_day" onClick="switch_day(this.id)">SUN</div>
+<div id="sch_1" class="sch_day" onClick="switch_day(this.id)">MON</div>
+<div id="sch_2" class="sch_day" onClick="switch_day(this.id)">TUE</div>
+<div id="sch_3" class="sch_day" onClick="switch_day(this.id)">WED</div>
+<div id="sch_4" class="sch_day" onClick="switch_day(this.id)">THU</div>
+<div id="sch_5" class="sch_day" onClick="switch_day(this.id)">FRI</div>
+<div id="sch_6" class="sch_day" onClick="switch_day(this.id)">SAT</div>
+</div>
+<div id="scheduled_shows"></div>
+</div>
+<div id="schedule_pull"><div id="schedule_text">Schedule</div></div>
+</div>
+
+
+</div><!--wrapper-->
+
+<div id="admin_login">
+<form id="adminform">
+ 
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" class="text ui-widget-content ui-corner-all">
+    
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" class="text ui-widget-content ui-corner-all">
+    
+ 
+  </form>
+</div>
+<div id="admin_logout">
+
+</div>
+
+<div id="add_show_dialog">
+<form id="add_show_cloud">
+  <fieldset>
+  <span id="error_new_show"></span>
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name"  autocomplete="on" placeholder="Enter Show and press Enter key to see results in list" class="text ui-widget-content ui-corner-all">
+    
+    <div id="resultstv">
+    
+    </div>
+    
+    
+    
+    <label for="ep_url"><a id="wiki_search_link" target="_blank" href="#">Click For Wiki URL Search</a></label>
+    <input type="url" name="ep_url" id="ep_url" value="" class="text ui-widget-content ui-corner-all">
+
+
+	<div id="form_add">
+    <div class="form_add_sec">
+    <label for="ep_date">Air Date</label>
+    <select id="ep_date" name="ep_date">
+    <option>Sunday</option>
+    <option>Monday</option>
+    <option>Tuesday</option>
+    <option>Wednesday</option>
+    <option>Thursday</option>
+    <option>Friday</option>
+    <option>Saturday</option>
+    </select>
+    </div>
+    <div class="form_add_sec">
+    <label for="ep_status">Show Status</label>
+    <select id="ep_status" name="ep_status">
+    <option>Airing</option>
+    <option>Ended</option>
+    </select>
+    </div>
+    </div>
+	<input type="hidden" name="tvrage_id" id="tvrage_id" value="">
+    
+  </fieldset>
+  </form>
+</div>
+
+
+<div id="del_show_dialog">
+<form id="del_form" >
+  <fieldset>
+        <span id="confirm_delete"></span>
+    <div id="delresultstv">
+    
+    </div>
+       <input type="hidden" name="del_id" id="del_id" value=""> 
+  </fieldset>
+  </form>
+</div>
+
+
+
+</body><div id="bottom"><div id="bottom_text">Wolf Labs - The Cloud Potato</div></div>
+</html>
