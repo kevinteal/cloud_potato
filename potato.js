@@ -805,7 +805,8 @@ function step_search(startpos){
 //percentage = parseInt(percentage);
 percentage =percentage.toFixed(2);
 
-			var content_step ="<img src='imgs/loading2.gif' height='10' width='50' />Step Search: "+(temp_startpos)+"/"+step_shows_arr.length+" "+percentage +"%";
+			var content_step ="<progress value='"+temp_startpos+"' max='"+step_shows_arr.length+"'></progress> Step Search: "+(temp_startpos)+"/"+step_shows_arr.length+" "+percentage +"%";
+			
 			if(percentage==100){
 				content_step = "Search Complete!";
 			}
