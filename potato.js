@@ -1,6 +1,7 @@
 // JavaScript Document
 var step_shows_arr = [];
 var static_last_week;
+var tv_json;
 
 $(document).ready(function(e) {
 	//get_latest_eps();
@@ -245,6 +246,32 @@ function set_up_page_events(){
       }
     });	
 	
+	$("#check_ended").dialog({
+		 autoOpen: false,
+      show: {
+        effect: "clip",
+        duration: 1000
+      },
+      hide: {
+        effect: "clip",
+        duration: 1000
+      },
+	  modal:true,
+	 title: "Search For Ended TV Shows",
+	 minWidth: 400,
+	 minHeight: 500,
+	 close: function( event, ui ) {
+		$("#check_ended_text").html('');
+		 },
+	  buttons: {
+        "Search": function() {
+			$("#check_ended_text").html('searching for ended shows.')
+        },
+        "Close": function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });	
 	
 	$('#schedule_text, #schedule_pull').click(function(){
 		
@@ -587,6 +614,7 @@ function set_up_admin_controls(){
 	$("#menu").html('<button onClick="add_show()"><img src="imgs/greenlight.png" width="20" height="20" /> Add Show</button>'+
 					'<button onClick="delete_show()"><img src="imgs/trash.png" width="20" height="20" /> Delete Show</button>'+
 					'<button onClick="refresh_shows()"><img src="imgs/refresh.png" width="20" height="20" /> Refresh</button>'+
+					'<button onClick="check_ended()"><img src="imgs/end.png" width="20" height="20" /> Check Ended</button>'+
 					'<button onClick="logout()"><img src="imgs/exit.png" width="20" height="20" /> Logout</button>');
 }
 	
@@ -775,7 +803,8 @@ function refresh_shows_step(){
 
 function step_search(startpos){
 	console.log("starting from: "+startpos);
-	if(startpos<=step_shows_arr[startpos]){
+	if(startpos<=step_shows_arr.length){
+		
 		var s1 = step_shows_arr[startpos];
 		var s2 = step_shows_arr[startpos+1];
 		var s3 = step_shows_arr[startpos+2]; 
@@ -797,6 +826,7 @@ function step_search(startpos){
       		$("#new_eps").append(data);
 			
 			var temp_startpos = startpos+3;
+			//excedded the array lenght
 			s1=="undefined" ? temp_startpos-- : "";
 			s2=="undefined" ? temp_startpos-- : "";
 			s3=="undefined" ? temp_startpos-- : "";
@@ -821,7 +851,72 @@ percentage =percentage.toFixed(2);
 		}});
 	}
 }
+
+function check_ended(){
+	$("#check_ended").dialog("open");
 	
+	$.getJSON("list_tv_shows_array.php", function(result){
+		tv_json = result;
+		//console.log("arr len "+tv_json.length);
+		//console.log("data 0: "+tv_json[0].id+" data 1: "+tv_json[0].name);
+		
+		$("#check_ended_gif").html('<center><img src="imgs/loader.gif" height="150" width="150" /><br/>Searching TV Shows</center>');
+		check_ended_search(0);
+       /* 
+	   	$.each(tv_json, function(i, show){
+           console.log(show.id + ":"+ show.name);
+        });
+		*/
+    });
+	// some sort of step search to find ended . find_ended.php
+}
+
+function check_ended_search(startpos){
+	console.log("starting from: "+startpos);
+	if(startpos<=tv_json.length){
+		
+		var s1 = (tv_json[startpos]) ? tv_json[startpos].id : "undefined";
+		var s2 = (tv_json[startpos+1]) ? tv_json[startpos+1].id : "undefined";
+		var s3 = (tv_json[startpos+2]) ? tv_json[startpos+2].id : "undefined";
+		
+
+		console.log("sending: "+s1+" : "+s2+" : "+s3); 
+		
+		 s1==undefined ? s1="undefined" : "";   
+		 s2==undefined ? s2="undefined" : "";   
+		 s3==undefined ? s3="undefined" : "";   
+		
+		//s3="undefined";
+		//s2="undefined"; 
+		
+		$.ajax({url:"find_ended.php?s1="+s1+"&s2="+s2+"&s3="+s3,cache:false}).done(function(data){
+			
+			console.log("back");
+			$("#check_ended_gif").empty();
+			$("#check_ended_text").append(data);
+		
+			
+			var temp_startpos = startpos+3;
+			//excedded the array lenght
+			s1=="undefined" ? temp_startpos-- : "";
+			s2=="undefined" ? temp_startpos-- : "";
+			s3=="undefined" ? temp_startpos-- : "";
+			
+			var percentage = (100 / tv_json.length) * (temp_startpos);
+//percentage = parseInt(percentage);
+percentage =percentage.toFixed(2);
+
+			var content_step ="<progress value='"+temp_startpos+"' max='"+tv_json.length+"'></progress> Step Search: "+(temp_startpos)+"/"+tv_json.length+" "+percentage +"%";
+			
+			if(percentage==100){
+				content_step = "Search Complete!";
+			}
+			$("#check_ended_notify").html(content_step);
+			console.log("just got: "+startpos);
+			check_ended_search(startpos+3);
+		});
+	}
+}
 	
 	
 	
