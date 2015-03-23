@@ -309,6 +309,8 @@ function attempt_login(){
 	}else{
 			//ajax for password
 			$.post( "login.php", $( "#adminform" ).serialize(), function(data){
+				
+				console.log(data);
 				if(data=="true"){
 					//logged in
 					$("#admin_login").dialog( "close" ); 
@@ -603,6 +605,7 @@ function logout(){
 	
 function check_login(){
 	$.ajax({url:"check_logged_in.php",success:function(result){
+		//console.log(result);
       if(result=="true"){
 		  set_up_admin_controls();
 	  }
