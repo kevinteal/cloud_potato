@@ -22,8 +22,8 @@ if($ep_status=="Ended"){
 
 $result = mysqli_query($con,"SELECT * FROM shows");
 
-$sql="INSERT INTO shows (showname, list_link, tvrageapi_id, status, scheduled)
-VALUES ('".$showname."', '".$url."', '".$tvrage_id."', $status, '".$ep_date."')";
+$sql="INSERT INTO shows (showname, list_link, tvrageapi_id, tvmaze_id, status, scheduled)
+VALUES ('".$showname."', '".$url."', '".$tvrage_id."', '".$tvrage_id."', $status, '".$ep_date."')";
 
 if (!mysqli_query($con,$sql)) {
 	echo "error";

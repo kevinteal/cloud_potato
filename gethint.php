@@ -15,7 +15,7 @@ $a=array();
 $x=0;
 while($row = mysqli_fetch_array($result))
   {
-	 $a[$x]=array($row['showname'],$row['tvrageapi_id']); 
+	 $a[$x]=array($row['showname'],$row['tvmaze_id']); 
 	 $x++;
   }
 
@@ -30,7 +30,8 @@ if (strlen($q) > 0)
     if (strtolower($q)==strtolower(substr($a[$i][0],0,strlen($q))))
       {
 		$id = $a[$i][1];
-        $hint=$hint."<li><a href='#history' onclick=get_history($id)>".$a[$i][0]."</a></li>";
+		$newphrase = str_replace(" ", ".", $a[$i][0]);
+        $hint=$hint."<li><a href='#history' onclick=get_history_tvmaze($id,\"$newphrase\") >".$a[$i][0]."</a></li>";
 		
         }
       }
@@ -54,7 +55,8 @@ else
 if($q==""){ 
 $text="";
 foreach($a as $show){
-	$text=$text."<li><a onclick=get_history($show[1])>".$show[0]."</a></li>";
+	$newphrase = str_replace(" ", ".",$show[0]);
+	$text=$text."<li><a onclick=get_history_tvmaze($show[1],\"$show[0]\")>".$show[0]."</a></li>";
 }
  $response = $text;
 }

@@ -14,7 +14,7 @@ $result = mysqli_query($con,"SELECT * FROM shows where status=1");
 $tv_shows = array();
 
 while($row = mysqli_fetch_array($result)) {
-	$id = $row['tvrageapi_id'];
+	$id = $row['tvmaze_id'];
  	$name = $row['showname'];
 	$show = array('id' => $id, 'name' => $name);
 	array_push($tv_shows,$show);

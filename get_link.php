@@ -9,7 +9,7 @@ if (mysqli_connect_errno()) {
 
 $showid = $_GET['showid'];
 
-$result = mysqli_query($con,"SELECT list_link FROM shows where tvrageapi_id='".$showid."'");
+$result = mysqli_query($con,"SELECT list_link FROM shows where tvmaze_id='".$showid."'");
 
 $row = mysqli_fetch_array($result);
 	$link = $row['list_link'];

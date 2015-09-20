@@ -593,6 +593,171 @@ function get_history(id){
 	
 }
 
+function get_history_tvmaze(id,showname){
+	console.log("clicked id:"+id+" "+showname);
+	$("#history_season_hold").html('Loading Data');
+	$("#history_tabs").html('');
+	var tv_count = 1;
+	var season_count=1;
+	var d = new Date();
+	var da = d.getDate();
+	var yea = d.getFullYear();
+	var mo = d.getMonth()+1;
+	mo = (mo<10) ? "0"+mo : mo;
+	da = (da<10) ? "0"+da: da;
+	var mydate = yea+""+mo+""+da;
+	var time = -1;
+	var store_latest_ep = "none found";
+	var store_season = "none found";
+	//console.log(mydate);
+	//get json, foreach will be every epside in all seasons,
+	//if season number changes create new div and holder etc.
+	$.getJSON( "http://api.tvmaze.com/shows/"+id+"/episodes", function( data ) {
+		$("#history_season_hold").html('');
+	  var items = [];
+	  var season_number = 0;
+	  $.each( data, function( key, val ) {
+		  if(val.image == null){
+			  var img = "no_img.gif";
+		  }else{
+			   var img = val.image['medium'];
+		  }
+		  var name =val.name; var season = val.season; var epnum = val.number; var airdate = val.airdate;
+		//items.push( name + " " + season + " " + epnum + " " + airdate + " " + img  );
+		
+		
+		var air_year = airdate.substr(0,4);
+		var air_mon = airdate.substr(5,2);
+		var air_day = airdate.substr(8,2);	
+		var uk_date = air_day+"/"+air_mon+"/"+air_year;
+		
+		
+		
+		
+		
+		var show_season;
+		var show_epnum;
+		if(season<10){
+			var show_season = "0"+season;
+		}else{
+			show_season = season;
+		}
+		if(epnum<10){
+			var show_epnum = "0"+epnum;
+		}else{
+			show_epnum = epnum;
+		}
+		
+		
+		if(season>season_number){
+			//console.log("----------NEW SEASON "+season+"----------");
+			if(season_number!=0){
+				tv_count=tv_count*180;
+	  			$("#tv_history_"+season_number).css('width',tv_count+'px');
+			}
+			season_number=season;
+			 //create the tab for season
+					$('<div>', {id:"tv_history_tab_"+season } ).appendTo("#history_tabs");
+					$("#tv_history_tab_"+season).addClass('history_season_tab');
+					$("#tv_history_tab_"+season).html('Season '+season);	
+					
+					//create click event for tab
+					$("#tv_history_tab_"+season).on("click", function(){
+						//alert(season);
+						$(".history_season").css("display","none");
+						$(".history_season_tab").css("background","#069");
+						$("#history_season_tab_hold").scrollLeft(0);
+						$(this).css("background","orange");
+						$("#tv_history_"+season).css("display","block");
+						
+					});				 
+					
+					//create the holding box for eps
+					$('<div>', {id:"tv_history_"+season } ).appendTo("#history_season_hold");
+					$("#tv_history_"+season).addClass('history_season');
+					//$("#tv_history_"+season_num).html('Season '+season);	
+		}
+			//console.log(airdate +" s"+show_season+"e"+show_epnum+" - "+name);
+		//create new div for ep and add to season 
+						$('<div>', {id:"trse"+show_epnum+"A"+season} ).appendTo("#tv_history_"+season);
+						$("#trse"+show_epnum+"A"+season).addClass('history_ep_box');
+						
+						
+						var google_title = name;
+						var search_title = google_title.replace(/ /g,"+");
+						if(name.length>22){
+							name = name.substring(0,22)+"...";
+						}
+						var text_link = "<a target='_blank' href=https://www.google.co.uk/search?q=" + showname + "+s"+show_season+"e"+show_epnum+"+720p+torrent+"+search_title+"&ie=UTF-8&safe=off>"+show_epnum+" - "+name+"</a>"; 
+						
+						$("#trse"+show_epnum+"A"+season).html("<div class='titlehold'>"+text_link+"</div><img src='"+img+"' height='100' width='150' draggable='false' />\r\r Aired - "+uk_date);
+						tv_count=epnum;
+		
+		season_count=season;
+		
+		//working out when last ep was
+		//time not set//getting last ep 
+		var ep_airdate = airdate.replace(/-/g,"");
+		mydate=parseInt(mydate);
+		ep_airdate = parseInt(ep_airdate);
+		var ep_time = mydate-ep_airdate;
+		//console.log(ep_time);
+		
+						if(time==-1){
+							time=ep_time;
+							//store id of ep
+							store_latest_ep = "trse"+show_epnum+"A"+season;
+							store_season = season;
+						}
+						
+						if(ep_time>=0){
+							if(ep_time<time){
+								time=ep_time;
+								//store id of ep
+								store_latest_ep = "trse"+show_epnum+"A"+season;
+								store_season = season;
+							}
+						}
+		
+	  });
+	  //keep one here for last season
+	 tv_count=tv_count*180;
+	 $("#tv_history_"+season_count).css('width',tv_count+'px');
+	
+	 season_count=season_count*140;
+	 $("#history_tabs").css("width",season_count+"px");
+	 
+	 $("#tv_history_"+store_season).css("display","block");
+	 $("#"+store_latest_ep).css('background-color','orange');
+	 $("#tv_history_tab_"+store_season).css('background-color','orange');
+				
+	 var lefty = $("#tv_history_tab_"+store_season).position().left;
+	 $("#history_season_tab_hold").scrollLeft(lefty);
+	 var lefty = $("#"+store_latest_ep).position().left;
+	 $("#history_season_hold").scrollLeft(lefty);
+	});
+	
+	
+	//console.log("fetch wiki link");
+	$.ajax({url:"get_link.php?showid="+id,success:function(result){
+		//$("#wiki_link").empty();
+      $("#wiki_link").html(result);
+	  $("#wiki").css('display','block');
+	 // console.log(result);
+    }});
+	
+	
+	//IF USING THE SCHEDULE BOX CLOSE IT ON CLICK
+	var sch_state = $('#schedule').css('left');
+		if (sch_state == "0px"){
+			$('#schedule').animate({
+			left:-560
+			},1500);
+		}	
+	
+}
+
+
 function login(){
 	console.log("log in process");
 	$( "#admin_login" ).dialog( "open" );
@@ -631,7 +796,7 @@ function tvrageapi(option,value){
 	$("#resultstv").empty();
 	$("#resultstv").html('<center><img src="imgs/loader.gif" height="190" width="190" /><br/>Loading TV Shows</center>');
 	$.ajax({
-	  url: "tvrageapi.php?value="+value,
+	  url: "tvmaze_search.php?value="+value,
 	  cache: false
 	})
 	  .done(function( html ) {
@@ -795,6 +960,7 @@ function refresh_shows_step(){
 		step_search(0);
 		}else{
 			//get cache shows
+			console.log("got cache");
 			$.ajax({url:"cache_shows.php",success: function(data){
 				$("#new_eps").empty();
 				$("#new_eps").append(data);
@@ -822,7 +988,7 @@ function step_search(startpos){
 		//s2="undefined"; 
 		
 		//javascript check if array is oversixed
-		$.ajax({url:"step_search.php?last_week="+static_last_week+"&s1="+s1+"&s2="+s2+"&s3="+s3}).done(function(data){
+		$.ajax({url:"step_search_tvmaze.php?last_week="+static_last_week+"&s1="+s1+"&s2="+s2+"&s3="+s3}).done(function(data){
 			//append data to results tv
 			//could re-order as well
 			$("#new_eps").empty();
@@ -892,7 +1058,7 @@ function check_ended_search(startpos){
 		//s3="undefined";
 		//s2="undefined"; 
 		
-		$.ajax({url:"find_ended.php?s1="+s1+"&s2="+s2+"&s3="+s3,cache:false}).done(function(data){
+		$.ajax({url:"check_ended_tvmaze.php?s1="+s1+"&s2="+s2+"&s3="+s3,cache:false}).done(function(data){
 			
 			console.log("back");
 			$("#check_ended_gif").empty();

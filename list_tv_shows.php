@@ -12,8 +12,10 @@ if (mysqli_connect_errno()) {
 $result = mysqli_query($con,"SELECT * FROM shows");
 
 while($row = mysqli_fetch_array($result)) {
-	$id = $row['tvrageapi_id'];
-  echo "<li><a href='#history' onClick='get_history($id)' >";
+	$id = $row['tvmaze_id'];
+	$showname = $row['showname'];
+	$newphrase = str_replace(" ", ".", $showname);
+  echo "<li><a href='#history' onClick=get_history_tvmaze($id,'$newphrase') >";
   echo $row['showname'];
   echo "</a></li>";
 }

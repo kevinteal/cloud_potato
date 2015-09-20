@@ -606,7 +606,7 @@ body{
 #history{
 	width:1340px;
 	top:100px;
-	opacity:0.7;
+	opacity:1;
 	position:relative;
 }
 #history_hold{

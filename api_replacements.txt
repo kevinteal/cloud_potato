@@ -1,0 +1,7 @@
+cloud potato api replacements
+
+search for show to add - http://api.tvmaze.com/search/shows?q=lost
+
+check ended (the 1 is the id)  - http://api.tvmaze.com/shows/1
+
+latest eps (the 1 is the id) - http://api.tvmaze.com/shows/1/episodes
