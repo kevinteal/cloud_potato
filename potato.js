@@ -690,7 +690,11 @@ function get_history_tvmaze(id,showname){
 						}
 						var text_link = "<a target='_blank' href=https://www.google.co.uk/search?q=" + showname + "+s"+show_season+"e"+show_epnum+"+720p+torrent+"+search_title+"&ie=UTF-8&safe=off>"+show_epnum+" - "+name+"</a>"; 
 						
-						$("#trse"+show_epnum+"A"+season).html("<div class='titlehold'>"+text_link+"</div><img src='"+img+"' height='100' width='150' draggable='false' />\r\r Aired - "+uk_date);
+						
+						var summary = $(val.summary).text();
+						summary = summary.replace("'", "");
+						
+						$("#trse"+show_epnum+"A"+season).html("<div class='titlehold'>"+text_link+"</div><img src='"+img+"' height='100' width='150' draggable='false' title='\""+summary+"\"' />\r\r Aired - "+uk_date);
 						tv_count=epnum;
 		
 		season_count=season;

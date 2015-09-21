@@ -103,7 +103,7 @@ $result = mysqli_query($con,"SELECT * FROM cache_shows order by airdate DESC");
                     <div class="ep_section">'.$display_title.'</div>
                     <div class="ep_section alt_color center_me">'.$day_name.'</div>
                     <div class="ep_section img_hold center_me"><a target="_blank" href="https://www.google.co.uk/search?q=' . $newphrase .'+'. $epno .'+720p+torrent+'.$search_title.'&ie=UTF-8&safe=off&tbs=qdr:w"  ><img src="imgs/download-icon.png" height="42" width="42" alt="dwnld" title="dwnlad" /></a></div>
-                    <div class="ep_section img_hold center_me"><a href="#history"  onclick="get_history_tvmaze('.$show_id.',"'.$newphrase.'")" ><img src="imgs/folder-icon.png" height="42" width="50" alt="history" title="Show History of Tv Show" /></a></div>                   
+                    <div class="ep_section img_hold center_me"><a href="#history"  onclick=get_history_tvmaze('.$show_id.',"'.$newphrase.'") ><img src="imgs/folder-icon.png" height="42" width="50" alt="history" title="Show History of Tv Show" /></a></div>                   
                 </div>';
 			
 		
