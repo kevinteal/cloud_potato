@@ -11,12 +11,13 @@ if (mysqli_connect_errno()) {
 $day = $_GET["day"];
 $day =  mysqli_real_escape_string($con, $day);
 
-$result = mysqli_query($con,"SELECT showname,tvrageapi_id FROM shows where scheduled='".$day."'");
+$result = mysqli_query($con,"SELECT showname,tvmaze_id FROM shows where scheduled='".$day."'");
 
 while($row = mysqli_fetch_array($result)) {
-	$id = $row['tvrageapi_id'];
+	$id = $row['tvmaze_id'];
 	$showname = $row["showname"];
-  echo "<li><a href='#history' onClick='get_history($id)' >";
+	$newphrase = str_replace(" ", ".", $showname);
+  echo "<li><a href='#history' onClick=get_history_tvmaze($id,'".$newphrase."') >";
   echo $row['showname'];
   echo "</a></li>";
 }

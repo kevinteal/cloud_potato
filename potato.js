@@ -666,7 +666,7 @@ function get_history_tvmaze(id,showname){
 						//alert(season);
 						$(".history_season").css("display","none");
 						$(".history_season_tab").css("background","#069");
-						$("#history_season_tab_hold").scrollLeft(0);
+						//$("#history_season_hold").scrollLeft(0);
 						$(this).css("background","orange");
 						$("#tv_history_"+season).css("display","block");
 						
@@ -692,7 +692,7 @@ function get_history_tvmaze(id,showname){
 						
 						
 						var summary = $(val.summary).text();
-						summary = summary.replace("'", "");
+						summary = summary.replace(/'/g, "");
 						
 						$("#trse"+show_epnum+"A"+season).html("<div class='titlehold'>"+text_link+"</div><img src='"+img+"' height='100' width='150' draggable='false' title='\""+summary+"\"' />\r\r Aired - "+uk_date);
 						tv_count=epnum;
@@ -836,9 +836,12 @@ function insertshow(name,ep_url,tvrageid){
 		console.log("clicked");
 	}
 	
-function getshowid(id,name,thi){
+function getshowid(id,name,thi,status,airday){
 	name = decodeURIComponent(name).replace(/\+/g," ");
 //	alert("id:"+id+" name:"+name);
+console.log(status+" "+airday);
+$("#ep_date").val(airday);
+$("#ep_status").val(status);
 	$("#name").val(name);
 	$("#tvrage_id").val(id);
 	//set href of search
