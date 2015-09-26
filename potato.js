@@ -273,6 +273,32 @@ function set_up_page_events(){
       }
     });	
 	
+	
+	$("#upcoming_show_dialog").dialog({
+		 autoOpen: false,
+      show: {
+        effect: "clip",
+        duration: 1000
+      },
+      hide: {
+        effect: "clip",
+        duration: 1000
+      },
+	  modal:true,
+	 title: "Upcoming Shows Next 7 Days",
+	 minWidth: 1100,
+	 minHeight: 700,
+	 close: function( event, ui ) {
+		$("#upcoming_results").html('');
+		 },
+	  buttons: {
+        "Close": function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });	
+	
+	
 	$('#schedule_text, #schedule_pull').click(function(){
 		
 		var sch_state = $('#schedule').css('left');
@@ -972,6 +998,7 @@ function refresh_shows_step(){
 				$("#new_eps").empty();
 				$("#new_eps").append(data);
 			}});
+			count_upcoming();
 		}
    }});
 	
@@ -1015,6 +1042,7 @@ percentage =percentage.toFixed(2);
 			
 			if(percentage==100){
 				content_step = "Search Complete!";
+				count_upcoming();
 			}
 			$("#step_notify").html(content_step);
 			console.log("just got: "+startpos);
@@ -1093,7 +1121,27 @@ percentage =percentage.toFixed(2);
 		});
 	}
 }
-	
+
+function upcoming_shows(){
+	//ajax for the upcoming shows, print it in json and work thru here in js
+	$("#upcoming_show_dialog").dialog("open");
+	$.getJSON( "list_upcoming.php", function( data ) {
+	  var items = [];
+	  $.each( data, function( key, val ) {
+		  var content = "<div class='ep'><div class='ep_showname upcoming_width_40'>"+val.Showname+"</div><div class='ep_section alt_color upcoming_width_10'>"+val.Ep+"</div><div class='ep_section upcoming_width_40'>"+val.Title+"</div><div class='ep_section alt_color center_me upcoming_width_10'>"+val.Airdate+"</div></div>";
+		  
+		  $("#upcoming_results").append(content);
+		  
+	  });
+	 
+	  
+	});
+}
+function count_upcoming(){
+	$.ajax({url:"count_upcoming.php",cache:false}).done(function(data){
+		$("#bubble_text").text(data)
+	});
+}
 	
 	
 	

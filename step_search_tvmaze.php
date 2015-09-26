@@ -10,6 +10,7 @@ $_GET['s2'] == "undefined" ? "" : array_push($show_id_arr,$_GET['s2']);
 $_GET['s3'] == "undefined" ? "" : array_push($show_id_arr,$_GET['s3']);
 
 $tv_array=array();
+$tv_array_upcoming=array();
 
 
 
@@ -37,6 +38,7 @@ $episode = file_get_contents($url);
 $json_eps = json_decode($episode,true);
 $date = date("Y-m-d",strtotime('-7 days'));
 $today = date("Y-m-d"); 
+$oneweek = date("Y-m-d",strtotime('+7 days'));
 //echo "date ". $date;
 //var_dump($json_eps);
 foreach ($json_eps as $value) {
@@ -58,6 +60,28 @@ foreach ($json_eps as $value) {
 		$ep_array = array($id,$showname,$epno,$value['name'],$airdate);
 		array_push($tv_array,$ep_array);
 	}	
+	
+	//add to upcoming db 
+	if($airdate>=$today && $airdate<$oneweek){
+    	//echo "Ep Title: $value[name] - $value[season] $value[number] Airdate: $value[airdate] <br />\n";
+		if($value['season']<10){
+			$season_no = "0"."".$value['season'];
+		}else{
+			$season_no = $value['season'];
+		}
+		if($value['number']<10){
+			$ep_no = "0"."".$value['number'];
+		}else{
+			$ep_no = $value['number'];
+		}
+		$epno = "s".$season_no."e". $ep_no;
+		$airdate = str_replace("-", "", $airdate);
+		$ep_array = array($id,$showname,$epno,$value['name'],$airdate);
+		array_push($tv_array_upcoming,$ep_array);
+	}	
+	
+	
+	
 }
 }
 
@@ -69,6 +93,18 @@ if(count($tv_array)>=1){
 			$tvshow[3] = mysqli_real_escape_string($con, $tvshow[3]);
 			//show id $tv_array[0] //show name $tvshow[1] //epno $tvshow[2] //title $tvshow[3] //airdate $tvshow[0]
 		mysqli_query($con,"INSERT INTO cache_shows (show_id, showname, ep_num, title, airdate) VALUES ('".$tvshow[0]."', '".$tvshow[1]."', '".$tvshow[2]."', '".$tvshow[3]."', '".$tvshow[4]."')");
+			}
+		
+	}//count arry
+	
+	//upcoming array
+	if(count($tv_array_upcoming)>=1){
+				
+		//update cache shows table with tv array 
+		foreach($tv_array_upcoming as $tvshow){
+			$tvshow[3] = mysqli_real_escape_string($con, $tvshow[3]);
+			//show id $tv_array[0] //show name $tvshow[1] //epno $tvshow[2] //title $tvshow[3] //airdate $tvshow[0]
+		mysqli_query($con,"INSERT INTO upcoming (show_id, showname, ep_num, title, airdate) VALUES ('".$tvshow[0]."', '".$tvshow[1]."', '".$tvshow[2]."', '".$tvshow[3]."', '".$tvshow[4]."')");
 			}
 		
 	}//count arry

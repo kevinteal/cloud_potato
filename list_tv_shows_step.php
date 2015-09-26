@@ -20,6 +20,7 @@ if($time!=$timestamp){
 	$result = mysqli_query($con,"SELECT tvrageapi_id FROM shows where status=1");
 	//need to delete the cache shows once
 	mysqli_query($con,"DELETE FROM cache_shows");
+	mysqli_query($con,"DELETE FROM upcoming");
 	$arr = array();
 	
 	while($row = mysqli_fetch_array($result)) {

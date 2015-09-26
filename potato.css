@@ -447,8 +447,42 @@ label, input { display:block; }
 	display:none;
 }
 
-
-
+#upcoming{
+	position:fixed;
+	bottom:0;
+	left:60%;
+	width:160px;
+	height:40px;
+	background:#FFBE7D;
+	box-sizing:border-box;
+	padding:5px;
+	text-align:center;
+	cursor:pointer;
+}
+#bubble{
+	position:absolute;
+	top:-5px;
+	left:92%;
+	border-radius:50%;
+	height:20px;
+	width:20px;
+	background:#039;
+	text-align:center;
+	cursor:pointer;
+}
+#bubble p{
+	position:relative;
+	top:-5px;
+	color:white;
+	font-size:1em;
+}
+.upcoming_width_40{
+	width:40% !important;
+}
+.upcoming_width_10{
+	width:10% !important;
+	text-align:left !important;
+}
 
 #confirm_delete{
 	display:block;
